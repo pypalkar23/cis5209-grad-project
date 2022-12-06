@@ -41,7 +41,7 @@ func main() {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(creds))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("Could not connect to server: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewSampleServiceClient(conn)
@@ -51,7 +51,7 @@ func main() {
 	defer cancel()
 	r, err := c.Greet(ctx, &pb.SendMsg{Name: *name})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not send message: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	log.Printf("Sending message: %s", r.GetMessage())
 }

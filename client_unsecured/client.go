@@ -18,25 +18,25 @@ const (
 
 var (
 	addr = flag.String("addr", "localhost:10001", "Address of Server")
-	name = flag.String("name", defaultName, "Name to greet")
+	name = flag.String("name", defaultName, "Name to send")
 )
 
 func main() {
 	flag.Parse()
-	// Set up a connection to the server.
+	// Connecting to server
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("Could not connect to server: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewSampleServiceClient(conn)
 
-	// Contact the server and print out its response.
+	// contacting the server and sending data
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := c.Greet(ctx, &pb.SendMsg{Name: *name})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not send message: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	log.Printf("Sending message: %s", r.GetMessage())
 }
